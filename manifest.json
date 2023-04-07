@@ -7,12 +7,24 @@
         "service_worker": "background.js"
     },
     "permissions": [
+        "storage",
         "activeTab",
         "scripting",
-        "tabs"
+        "tabs",
+        "cookies"
     ],
+    "content_scripts": [
+        {
+          "matches": [
+            "https://chat.openai.com/chat"
+          ],
+          "js": [
+            "content.js"
+          ]
+        }
+      ],
     "action": {
         "default_title": "Upload a File",
-        "default_popup": "popup.html"
+        "default_popup": "popup/popup.html"
     }
 }

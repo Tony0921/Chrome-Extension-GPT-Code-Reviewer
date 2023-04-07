@@ -1,4 +1,6 @@
-chrome.action.onClicked.addListener(tab => { 
-    const {url} = tab;
-    console.log(`Loading: ${url}`); 
-  });
+console.log("background page ready");
+
+chrome.action.onClicked.addListener(function(btn) {  
+    console.log("aa"); 
+
+});
