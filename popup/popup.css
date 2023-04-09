@@ -11,7 +11,19 @@ h1 {
     /* 可以根據需要調整字體大小 */
 }
 
-.button-container {
+h3 {
+    margin: 0 10px;
+}
+
+.row1,
+.row2 {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 20px;
+}
+
+.btn-row1,
+.btn-row2 {
     display: flex;
     justify-content: space-between;
     margin: 0 20px;
