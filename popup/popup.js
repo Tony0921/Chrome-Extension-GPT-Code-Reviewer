@@ -31,4 +31,10 @@ document.addEventListener("DOMContentLoaded", function () {
             chrome.tabs.sendMessage(activeTab.id, {type: "paramenters"});
         });
     });
+    document.getElementById("flow-btn").addEventListener("click", function () {
+        chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
+            var activeTab = tabs[0];
+            chrome.tabs.sendMessage(activeTab.id, {type: "flow"});
+        });
+    });
 });
