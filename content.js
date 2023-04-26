@@ -5,11 +5,11 @@ var intervalID = setInterval(function () {
     var rs = document.getElementsByClassName("result-streaming");
     // console.log(rs);
     if (rs.length == 0) {
-        console.log("can send!");
+        // console.log("can send!");
         canSend = true;
     } else {
         canSend = false;
-        console.log("can't send!");
+        // console.log("can't send!");
     }
 }, 1000);
 
@@ -59,10 +59,10 @@ async function chooseFiles() {
             len += contents.length;
             fileContents.push({ fileName, contents });
         }
-        console.log("len:" + len);
+        // console.log("len:" + len);
         console.log(fileContents);
         console.log("finish!");
-        console.log("result len:" + results.length);
+        // console.log("result len:" + results.length);
 
         let cancelled = false;
 
@@ -95,7 +95,7 @@ async function chooseFiles() {
             if (cancelled) {
                 // 清除提示框
                 // 退出迭代
-                taskStatus.innerText = "Waiting for";
+                // taskStatus.innerText = "Waiting for";
                 taskStatus.remove();
                 bg.remove();
                 break;
