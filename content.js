@@ -37,6 +37,10 @@ chrome.runtime.onMessage.addListener(
             // chooseFiles("paramenters");
             setPrompt("flow");
         }
+        if (message.type === "review") {
+            // chooseFiles("paramenters");
+            setPrompt("review");
+        }
     }
 );
 
@@ -64,67 +68,116 @@ async function chooseFiles() {
         console.log("finish!");
         // console.log("result len:" + results.length);
 
-        let cancelled = false;
-
-        // 顯示提示框
-        const taskStatus = document.createElement("div");
-        taskStatus.classList.add("task-status");
-
-        const cancelButton = document.createElement("button");
-        cancelButton.innerText = "Cancel";
-        cancelButton.addEventListener("click", async function(){
-            cancelled = true;
-            taskStatus.innerText = "Canceling...";
-            console.log("cancel click");
-        });
-
-        const bg = document.createElement("div");
-        bg.classList.add("alert-bg");
-        document.body.appendChild(bg);
-
-        for (var fileContent of fileContents) {
-            taskStatus.innerText = `Waiting for upload ${fileContent.fileName}`;
-            taskStatus.appendChild(cancelButton);
-            document.body.appendChild(taskStatus);
-
-            while (!canSend) {
-                await new Promise(resolve => setTimeout(resolve, 1000));
-            }
-
-            // 檢查是否已取消
-            if (cancelled) {
-                // 清除提示框
-                // 退出迭代
-                // taskStatus.innerText = "Waiting for";
-                taskStatus.remove();
-                bg.remove();
-                break;
-            }
-
-            var result = merge(fileContent.contents, fileContent.fileName);
-            setFieldValue(result);
-            send();
-            canSend = false;
-            
-            // 清除提示框
-            taskStatus.remove();
-        }
-
-        // 清除提示框
-        if (!cancelled) {
-            const taskStatus = document.createElement("div");
-            taskStatus.classList.add("task-status");
-            taskStatus.innerText = "All Task Complete!";
-            document.body.appendChild(taskStatus);
-            var timeoutID = setTimeout(()=>{
-                taskStatus.remove();
-                bg.remove();
-            }, 2000);
-        }
+        await sendCode(fileContents);
         
         // setFieldValue(result);
         // addPrompt(type);
     });
+}
+
+async function sendCode(fileContents){
+    let cancelled = false;
+    let fileCount = 0;
+
+    // 顯示提示框
+    const taskStatus = document.createElement("div");
+    taskStatus.classList.add("task-status");
+
+    const statusMsg = document.createElement("div");
+    statusMsg.classList.add("status-msg");
+
+    const uploadFailed = document.createElement("div");
+    uploadFailed.classList.add("upload-failed");
+
+    taskStatus.appendChild(statusMsg);
+    taskStatus.appendChild(uploadFailed);
+
+    // 取消按鈕
+    const cancelButton = document.createElement("button");
+    cancelButton.innerText = "Cancel";
+    cancelButton.addEventListener("click", async function(){
+        cancelled = true;
+        taskStatus.innerText = "Canceling...";
+        console.log("cancel click");
+    });
+
+    // 背景遮罩
+    const bg = document.createElement("div");
+    bg.classList.add("alert-bg");
+    document.body.appendChild(bg);
+
+    
+    for (var fileContent of fileContents) {
+        statusMsg.innerText = `Waiting for upload ${fileContent.fileName} ...`;
+        taskStatus.appendChild(cancelButton);
+        document.body.appendChild(taskStatus);
+        // console.log(fileContent.contents.length);
+        if (fileContent.contents.length > 16000) {
+            // reject
+            // taskStatus.innerText = `File size exceeds 16,000 bytes: ${fileContent.fileName}`;
+            // taskStatus.style.color = "red";
+            // taskStatus.removeChild(cancelButton);
+            // bg.style.opacity = "0.5";
+            // throw new Error(`File size exceeds 16,000 bytes: ${fileContent.fileName}`);
+            uploadFailed.innerText += `${fileContent.fileName} content exceeds the limit!\n`;
+            console.log(fileContent.fileName,"not unpload");
+            continue;
+        }
+
+        while (!canSend) {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+
+        // 檢查是否已取消
+        if (cancelled) {
+            // 清除提示框
+            // 退出迭代
+            // taskStatus.innerText = "Waiting for";
+            taskStatus.remove();
+            bg.remove();
+            break;
+        }
+
+        var result = merge(fileContent.contents, fileContent.fileName);
+        setFieldValue(result);
+        clickSend();
+        canSend = false;
+        fileCount++;
+        
+        // 清除提示框
+        taskStatus.remove();
+    }
+
+    // 清除提示框
+    if (!cancelled) {
+        // const taskStatus = document.createElement("div");
+        // taskStatus.classList.add("task-status");
+
+        const comfirmButton = document.createElement("button");
+        comfirmButton.innerText = "Comfirm";
+        comfirmButton.addEventListener("click", async function(){
+            taskStatus.remove();
+            bg.remove();
+            console.log("Comfirm click");
+        });
+
+        if (fileCount==fileContents.length) {
+            taskStatus.innerText = "All Task Complete!";
+        }else{
+            taskStatus.appendChild(statusMsg);
+            taskStatus.appendChild(uploadFailed);
+
+            statusMsg.innerText = "The following file(s) have not been uploaded:";
+        }
+
+        cancelButton.remove();
+        taskStatus.appendChild(comfirmButton);
+        document.body.appendChild(taskStatus);
+        // var timeoutID = setTimeout(()=>{
+        //     taskStatus.remove();
+        //     bg.remove();
+        // }, 2000);
+    }
 }
 
 function readFile(file) {
@@ -153,6 +206,9 @@ function setPrompt(type) {
     }
     else if (type == "flow") {
         prompt = "Use PlantUML syntax create the flow chart with copy code output.";
+    }
+    else if (type == "review") {
+        prompt = "Review this program, include Code review part and Suggestions for improvement part.";
     }
     setFieldValue(prompt);
 }
@@ -201,7 +257,7 @@ function checkFieldValue(value) {
 
 }
 
-function send() {
+function clickSend() {
     var sendBtn = getSendBtn();
     sendBtn.click();
     canSend = false;
