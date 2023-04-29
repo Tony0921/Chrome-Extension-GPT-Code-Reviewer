@@ -1,4 +1,4 @@
-console.log("contents");
+// console.log("contents");
 
 let canSend = true;
 var intervalID = setInterval(function () {
@@ -22,23 +22,18 @@ chrome.runtime.onMessage.addListener(
             setFieldValue("");
         }
         if (message.type === "manual") {
-            // chooseFiles("manual");
             setPrompt("manual");
         }
         if (message.type === "api") {
-            // chooseFiles("api");
             setPrompt("api");
         }
         if (message.type === "paramenters") {
-            // chooseFiles("paramenters");
             setPrompt("paramenters");
         }
         if (message.type === "flow") {
-            // chooseFiles("paramenters");
             setPrompt("flow");
         }
         if (message.type === "review") {
-            // chooseFiles("paramenters");
             setPrompt("review");
         }
     }
@@ -59,13 +54,13 @@ async function chooseFiles() {
             const fileName = file.name;
             // console.log("File name:", fileName);
             const contents = await readFile(file);
-            console.log("contents len:" + contents.length);
+            // console.log("contents len:" + contents.length);
             len += contents.length;
             fileContents.push({ fileName, contents });
         }
         // console.log("len:" + len);
-        console.log(fileContents);
-        console.log("finish!");
+        // console.log(fileContents);
+        // console.log("finish!");
         // console.log("result len:" + results.length);
 
         await sendCode(fileContents);
@@ -98,7 +93,7 @@ async function sendCode(fileContents){
     cancelButton.addEventListener("click", async function(){
         cancelled = true;
         taskStatus.innerText = "Canceling...";
-        console.log("cancel click");
+        // console.log("cancel click");
     });
 
     // 背景遮罩
@@ -114,13 +109,8 @@ async function sendCode(fileContents){
         // console.log(fileContent.contents.length);
         if (fileContent.contents.length > 16000) {
             // reject
-            // taskStatus.innerText = `File size exceeds 16,000 bytes: ${fileContent.fileName}`;
-            // taskStatus.style.color = "red";
-            // taskStatus.removeChild(cancelButton);
-            // bg.style.opacity = "0.5";
-            // throw new Error(`File size exceeds 16,000 bytes: ${fileContent.fileName}`);
             uploadFailed.innerText += `${fileContent.fileName} content exceeds the limit!\n`;
-            console.log(fileContent.fileName,"not unpload");
+            // console.log(fileContent.fileName,"not unpload");
             continue;
         }
 
@@ -132,7 +122,6 @@ async function sendCode(fileContents){
         if (cancelled) {
             // 清除提示框
             // 退出迭代
-            // taskStatus.innerText = "Waiting for";
             taskStatus.remove();
             bg.remove();
             break;
@@ -158,7 +147,7 @@ async function sendCode(fileContents){
         comfirmButton.addEventListener("click", async function(){
             taskStatus.remove();
             bg.remove();
-            console.log("Comfirm click");
+            // console.log("Comfirm click");
         });
 
         if (fileCount==fileContents.length) {
@@ -214,23 +203,29 @@ function setPrompt(type) {
 }
 
 function getSendBtn() {
-    var elements_1 = document.getElementsByClassName("absolute");
-    var elements_2 = document.getElementsByTagName("button");
-    for (var element_1 of elements_1) {
-        for (var element_2 of elements_2) {
-            if (element_1 == element_2) {
-                // console.log(element_1);
-                // sendBtn = element_1;
-                // break;
-                return element_1;
-            }
-        }
-    }
-
+    // var elements_1 = document.getElementsByClassName("absolute");
+    // var elements_2 = document.getElementsByTagName("button");
+    // console.log(elements_1);
+    // console.log(elements_2);
+    var elements_3 = document.querySelectorAll('button.absolute');
+    // console.log(elements_3);
+    // for (var element_1 of elements_1) {
+    //     element_1
+    //     for (var element_2 of elements_2) {
+    //         if (element_1 == element_2) {
+    //             console.log(element_1);
+    //             // sendBtn = element_1;
+    //             // break;
+    //             return element_1;
+    //         }
+    //     }
+    // }
+    return elements_3[0];
 }
 
 function setFieldValue(value) {
     var inputField = document.getElementsByTagName("textarea")[0];
+    // console.log(inputField);
     inputField.value = value;
     // inputField.defaultValue = value;
 
