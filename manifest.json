@@ -5,7 +5,7 @@
 	"description": "This extension enables users to upload files for ChatGPT to analyze and summarize.",
 	"icons": {
 		
-		"128": "icons/icon128.png"
+		"128": "icons/icon128_.png"
 	},
 	"content_scripts": [
 		{
