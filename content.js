@@ -207,7 +207,7 @@ function getSendBtn() {
     // var elements_2 = document.getElementsByTagName("button");
     // console.log(elements_1);
     // console.log(elements_2);
-    var elements_3 = document.querySelectorAll('button.absolute');
+    var elements_3 = document.querySelectorAll('button.absolute.p-1');
     // console.log(elements_3);
     // for (var element_1 of elements_1) {
     //     element_1
