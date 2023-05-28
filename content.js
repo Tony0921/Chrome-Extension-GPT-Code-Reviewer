@@ -31,6 +31,9 @@ chrome.runtime.onMessage.addListener(
         if (message.type === "review") {
             setPrompt("review");
         }
+        if (message.type === "markdown") {
+            setPrompt("markdown");
+        }
     }
 );
 
@@ -55,60 +58,97 @@ async function chooseFiles() {
     });
 }
 
-async function sendCode(fileContents){
-    let cancelled = false;
-    let fileCount = 0;
+let cancelled = false;
 
-    // 顯示提示框
-    const taskStatus = document.createElement("div");
+const taskStatus = document.createElement("div");
+const statusMsg = document.createElement("div");
+const uploadFailed = document.createElement("div");
+const cancelButton = document.createElement("button");
+const comfirmButton = document.createElement("button");
+const bg = document.createElement("div");
+
+function initUI(){
     taskStatus.classList.add("task-status");
-
-    const statusMsg = document.createElement("div");
     statusMsg.classList.add("status-msg");
-
-    const uploadFailed = document.createElement("div");
     uploadFailed.classList.add("upload-failed");
 
-    taskStatus.appendChild(statusMsg);
-    taskStatus.appendChild(uploadFailed);
-
-    // 取消按鈕
-    const cancelButton = document.createElement("button");
+    cancelButton.classList.add("cancel-btn");
     cancelButton.innerText = "Cancel";
     cancelButton.addEventListener("click", async function(){
         cancelled = true;
-        taskStatus.innerText = "Canceling...";
+        statusMsg.innerText = "Canceling...";
     });
 
-    // 背景遮罩
-    const bg = document.createElement("div");
+    comfirmButton.classList.add("comfirm-btn");
+    comfirmButton.innerText = "Comfirm";
+    comfirmButton.addEventListener("click", async function(){
+        removeUI();
+        removeBG();
+    });
+
+    taskStatus.appendChild(statusMsg);
+    taskStatus.appendChild(uploadFailed);
+}
+
+initUI();
+
+function showUI(state){
+    console.log("show UI");
+    if(state == "complete"){
+        taskStatus.appendChild(comfirmButton);
+    }
+    else if(state == "cancel"){
+        taskStatus.appendChild(cancelButton);
+    }
+    document.body.appendChild(taskStatus);
+}
+
+function removeUI(){
+    console.log("remove UI");
+    cancelButton.remove();
+    comfirmButton.remove();
+    taskStatus.remove();
+}
+
+// BG mask
+function showBG(){
     bg.classList.add("alert-bg");
     document.body.appendChild(bg);
+}
 
-    
+function removeBG(){
+    bg.remove();
+}
+
+async function sendCode(fileContents){
+    let fileCount = 0;
+    showBG();
+    uploadFailed.innerText = "";
+
     for (var fileContent of fileContents) {
+        showUI("cancel");
         statusMsg.innerText = `Waiting for upload ${fileContent.fileName} ...`;
-        taskStatus.appendChild(cancelButton);
-        document.body.appendChild(taskStatus);
+
+        // 超出字數上限，跳過上傳
         if (fileContent.contents.length > 16000) {
             // reject
             uploadFailed.innerText += `${fileContent.fileName} content exceeds the limit!\n`;
             continue;
         }
 
+        // 等待回答完成
         while (!canSend) {
             await new Promise(resolve => setTimeout(resolve, 1000));
         }
 
         // 檢查是否已取消
         if (cancelled) {
-            // 清除提示框
-            // 退出迭代
-            taskStatus.remove();
-            bg.remove();
+            removeUI();
+            removeBG();
             break;
         }
 
+        // 填入輸入框，按下送出按鈕
         var result = merge(fileContent.contents, fileContent.fileName);
         setFieldValue(result);
         clickSend();
@@ -116,30 +156,20 @@ async function sendCode(fileContents){
         fileCount++;
         
         // 清除提示框
-        taskStatus.remove();
+        removeUI();
     }
 
     // 清除提示框
     if (!cancelled) {
-        const comfirmButton = document.createElement("button");
-        comfirmButton.innerText = "Comfirm";
-        comfirmButton.addEventListener("click", async function(){
-            taskStatus.remove();
-            bg.remove();
-        });
+        removeUI();
 
         if (fileCount==fileContents.length) {
-            taskStatus.innerText = "All Task Complete!";
+            statusMsg.innerText = "All Task Complete!";
         }else{
-            taskStatus.appendChild(statusMsg);
-            taskStatus.appendChild(uploadFailed);
-
             statusMsg.innerText = "The following file(s) have not been uploaded:";
         }
 
-        cancelButton.remove();
-        taskStatus.appendChild(comfirmButton);
-        document.body.appendChild(taskStatus);
+        showUI("complete");
     }
 }
 
@@ -173,12 +203,15 @@ function setPrompt(type) {
     else if (type == "review") {
         prompt = "Review this program, include Code review part and Suggestions for improvement part.";
     }
+    else if (type == "markdown") {
+        prompt = "Using markdown source code to write a readme.md for this program.";
+    }
     setFieldValue(prompt);
 }
 
 function getSendBtn() {
-    var elements_3 = document.querySelectorAll('button.absolute.p-1');
-    return elements_3[0];
+    var element = document.querySelectorAll('button.absolute.p-1');
+    return element[0];
 }
 
 function setFieldValue(value) {
@@ -204,8 +237,6 @@ function checkFieldValue(value) {
     } else {
         sendBtn.disabled = true;
     }
-
-
 }
 
 function clickSend() {

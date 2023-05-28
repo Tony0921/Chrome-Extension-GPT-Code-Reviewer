@@ -1,8 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Kosugi+Maru&display=swap');
+
 body {
     min-width: 300px;
     min-height: 80px;
     background-color: #f5f5f5;
-    font-family: Arial, sans-serif;
+    font-family: 'Kosugi Maru', sans-serif;
 }
 
 h1 {
@@ -31,7 +33,6 @@ h3 {
 
 button {
     background-color: #4CAF50;
-    /* set button background color */
     border: none;
     color: white;
     padding: 10px 20px;
@@ -42,9 +43,8 @@ button {
     margin: 10px 5px;
     cursor: pointer;
     border-radius: 5px;
-    /* add border radius */
     box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
-    /* add box shadow */
+    font-family: 'Kosugi Maru', sans-serif;
 }
 
 /* 更改字體樣式 */
