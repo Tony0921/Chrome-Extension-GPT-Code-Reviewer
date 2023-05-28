@@ -1,15 +1,10 @@
-// console.log("contents");
-
 let canSend = true;
 var intervalID = setInterval(function () {
     var rs = document.getElementsByClassName("result-streaming");
-    // console.log(rs);
     if (rs.length == 0) {
-        // console.log("can send!");
         canSend = true;
     } else {
         canSend = false;
-        // console.log("can't send!");
     }
 }, 1000);
 
@@ -46,27 +41,17 @@ async function chooseFiles() {
     fileInput.click();
     fileInput.addEventListener("change", async function () {
         const files = fileInput.files;
-        // console.log(files);
         const fileContents = [];
         var results = "";
         var len = 0;
         for (const file of files) {
             const fileName = file.name;
-            // console.log("File name:", fileName);
             const contents = await readFile(file);
-            // console.log("contents len:" + contents.length);
             len += contents.length;
             fileContents.push({ fileName, contents });
         }
-        // console.log("len:" + len);
-        // console.log(fileContents);
-        // console.log("finish!");
-        // console.log("result len:" + results.length);
 
         await sendCode(fileContents);
-        
-        // setFieldValue(result);
-        // addPrompt(type);
     });
 }
 
@@ -93,7 +78,6 @@ async function sendCode(fileContents){
     cancelButton.addEventListener("click", async function(){
         cancelled = true;
         taskStatus.innerText = "Canceling...";
-        // console.log("cancel click");
     });
 
     // 背景遮罩
@@ -106,11 +90,9 @@ async function sendCode(fileContents){
         statusMsg.innerText = `Waiting for upload ${fileContent.fileName} ...`;
         taskStatus.appendChild(cancelButton);
         document.body.appendChild(taskStatus);
-        // console.log(fileContent.contents.length);
         if (fileContent.contents.length > 16000) {
             // reject
             uploadFailed.innerText += `${fileContent.fileName} content exceeds the limit!\n`;
-            // console.log(fileContent.fileName,"not unpload");
             continue;
         }
 
@@ -139,15 +121,11 @@ async function sendCode(fileContents){
 
     // 清除提示框
     if (!cancelled) {
-        // const taskStatus = document.createElement("div");
-        // taskStatus.classList.add("task-status");
-
         const comfirmButton = document.createElement("button");
         comfirmButton.innerText = "Comfirm";
         comfirmButton.addEventListener("click", async function(){
             taskStatus.remove();
             bg.remove();
-            // console.log("Comfirm click");
         });
 
         if (fileCount==fileContents.length) {
@@ -162,10 +140,6 @@ async function sendCode(fileContents){
         cancelButton.remove();
         taskStatus.appendChild(comfirmButton);
         document.body.appendChild(taskStatus);
-        // var timeoutID = setTimeout(()=>{
-        //     taskStatus.remove();
-        //     bg.remove();
-        // }, 2000);
     }
 }
 
@@ -203,31 +177,13 @@ function setPrompt(type) {
 }
 
 function getSendBtn() {
-    // var elements_1 = document.getElementsByClassName("absolute");
-    // var elements_2 = document.getElementsByTagName("button");
-    // console.log(elements_1);
-    // console.log(elements_2);
     var elements_3 = document.querySelectorAll('button.absolute.p-1');
-    // console.log(elements_3);
-    // for (var element_1 of elements_1) {
-    //     element_1
-    //     for (var element_2 of elements_2) {
-    //         if (element_1 == element_2) {
-    //             console.log(element_1);
-    //             // sendBtn = element_1;
-    //             // break;
-    //             return element_1;
-    //         }
-    //     }
-    // }
     return elements_3[0];
 }
 
 function setFieldValue(value) {
     var inputField = document.getElementsByTagName("textarea")[0];
-    // console.log(inputField);
     inputField.value = value;
-    // inputField.defaultValue = value;
 
     // set textfield height
     if (inputField.scrollHeight < 200) {
