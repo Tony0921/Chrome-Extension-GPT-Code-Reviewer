@@ -10,7 +10,6 @@ body {
 h1 {
     text-align: center;
     font-size: 2rem;
-    /* 可以根據需要調整字體大小 */
 }
 
 h3 {
@@ -26,9 +25,15 @@ h3 {
 
 .btn-row1,
 .btn-row2 {
+    width: 450px;
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     margin: 0 20px;
+}
+
+.btn-row2 button {
+    width: 130px;
 }
 
 button {
@@ -47,13 +52,14 @@ button {
     font-family: 'Kosugi Maru', sans-serif;
 }
 
-/* 更改字體樣式 */
-p {
-    font-style: italic;
-    /* 設置字體為斜體 */
+button:hover {
+    background-color: #45A44F;
 }
 
-/* 加粗字體 */
+p {
+    font-style: italic;
+}
+
 strong {
     font-weight: bold;
 }
