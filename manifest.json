@@ -4,8 +4,7 @@
 	"version": "3.2",
 	"description": "This extension enables users to upload files for ChatGPT to analyze and summarize.",
 	"icons": {
-		
-		"128": "icons/icon128_.png"
+		"128": "icons/icon128.png"
 	},
 	"content_scripts": [
 		{
