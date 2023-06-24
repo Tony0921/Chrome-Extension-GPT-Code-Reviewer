@@ -13,9 +13,6 @@ chrome.runtime.onMessage.addListener(
         if (message.type === "upload") {
             chooseFiles();
         }
-        if (message.type === "clear") {
-            setFieldValue("");
-        }
         if (message.type === "manual") {
             setPrompt("manual");
         }
@@ -67,21 +64,21 @@ const cancelButton = document.createElement("button");
 const comfirmButton = document.createElement("button");
 const bg = document.createElement("div");
 
-function initUI(){
+function initUI() {
     taskStatus.classList.add("task-status");
     statusMsg.classList.add("status-msg");
     uploadFailed.classList.add("upload-failed");
 
     cancelButton.classList.add("cancel-btn");
     cancelButton.innerText = "Cancel";
-    cancelButton.addEventListener("click", async function(){
+    cancelButton.addEventListener("click", async function () {
         cancelled = true;
         statusMsg.innerText = "Canceling...";
     });
 
     comfirmButton.classList.add("comfirm-btn");
     comfirmButton.innerText = "Comfirm";
-    comfirmButton.addEventListener("click", async function(){
+    comfirmButton.addEventListener("click", async function () {
         removeUI();
         removeBG();
     });
@@ -92,35 +89,33 @@ function initUI(){
 
 initUI();
 
-function showUI(state){
-    console.log("show UI");
-    if(state == "complete"){
+function showUI(state) {
+    if (state == "complete") {
         taskStatus.appendChild(comfirmButton);
     }
-    else if(state == "cancel"){
+    else if (state == "cancel") {
         taskStatus.appendChild(cancelButton);
     }
     document.body.appendChild(taskStatus);
 }
 
-function removeUI(){
-    console.log("remove UI");
+function removeUI() {
     cancelButton.remove();
     comfirmButton.remove();
     taskStatus.remove();
 }
 
 // BG mask
-function showBG(){
+function showBG() {
     bg.classList.add("alert-bg");
     document.body.appendChild(bg);
 }
 
-function removeBG(){
+function removeBG() {
     bg.remove();
 }
 
-async function sendCode(fileContents){
+async function sendCode(fileContents) {
     let fileCount = 0;
     showBG();
     uploadFailed.innerText = "";
@@ -154,7 +149,7 @@ async function sendCode(fileContents){
         clickSend();
         canSend = false;
         fileCount++;
-        
+
         // 清除提示框
         removeUI();
     }
@@ -163,9 +158,9 @@ async function sendCode(fileContents){
     if (!cancelled) {
         removeUI();
 
-        if (fileCount==fileContents.length) {
+        if (fileCount == fileContents.length) {
             statusMsg.innerText = "All Task Complete!";
-        }else{
+        } else {
             statusMsg.innerText = "The following file(s) have not been uploaded:";
         }
 
@@ -207,6 +202,7 @@ function setPrompt(type) {
         prompt = "Using markdown source code to write a readme.md for this program.";
     }
     setFieldValue(prompt);
+    clickSend();
 }
 
 function getSendBtn() {
@@ -215,8 +211,10 @@ function getSendBtn() {
 }
 
 function setFieldValue(value) {
-    var inputField = document.getElementsByTagName("textarea")[0];
+    var inputField = document.getElementById("prompt-textarea");
     inputField.value = value;
+    inputField.dispatchEvent(new Event("input", { bubbles: true }));
+    inputField.focus();
 
     // set textfield height
     if (inputField.scrollHeight < 200) {
@@ -225,18 +223,6 @@ function setFieldValue(value) {
         inputField.setAttribute("style", "max-height:200px; height:" + (inputField.scrollHeight) + "px;");
     }
 
-    checkFieldValue(value);
-}
-
-function checkFieldValue(value) {
-    var sendBtn = getSendBtn();
-
-    // enable button
-    if (value != "") {
-        sendBtn.disabled = false;
-    } else {
-        sendBtn.disabled = true;
-    }
 }
 
 function clickSend() {
