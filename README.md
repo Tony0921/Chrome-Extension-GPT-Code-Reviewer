@@ -1,1 +1,1 @@
-# chrome_extension_gpt
+# Chrome-Extension-GPT-Code-Reviewer
