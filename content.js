@@ -1,6 +1,13 @@
 let canSend = true;
 var intervalID = setInterval(function () {
-    var rs = document.getElementsByClassName("result-streaming");
+    var rs = document.querySelectorAll('div.result-streaming.markdown');
+    var tag1 = document.querySelectorAll('div.markdown.prose');
+    var tag2 = document.querySelectorAll('div.flex.flex-col.items-start');
+    
+    if (tag2.length / tag1.length != 2.0){
+        return;
+    }
+
     if (rs.length == 0) {
         canSend = true;
     } else {
