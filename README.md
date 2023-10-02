@@ -4,7 +4,7 @@
 
 ## Description
 
-This Chrome extension enables users to upload files for ChatGPT to analyze and summarize. It's designed to work specifically with the OpenAI Chat platform.
+The GPT Code Reviewer is a Chrome extension that empowers users to upload files for ChatGPT to analyze and summarize. Simply put, it bridges the gap between your code files and ChatGPT's analytical prowess, making code reviews more streamlined and insightful.
 
 ## Features
 
@@ -14,9 +14,11 @@ This Chrome extension enables users to upload files for ChatGPT to analyze and s
 
 ## Installation
 
-1. Download the extension from the Chrome Web Store.
-2. Click on the extension icon in the Chrome toolbar.
-3. Follow the on-screen instructions to get started.
+1. Open the Chrome browser and [navigate to the GPT Code Reviewer on the Chrome Web Store](https://chrome.google.com/webstore/detail/gpt-code-reviewer/mfebbjnnjjedlmbgpdfpkfmmkghaiboo?fbclid=IwAR341zWeodJUiedTio7YWsIqXBRADEczX3A0cVnP89B989_AS_SUm-ElAqY).
+2. Click on "Add to Chrome".
+3. Follow the on-screen instructions to complete the installation.
+
+Once installed, you'll see the GPT Code Reviewer icon on your Chrome toolbar, ready for use!
 
 ## Usage
 
@@ -28,8 +30,3 @@ This Chrome extension enables users to upload files for ChatGPT to analyze and s
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
-
-## Contact
-
-For any queries or feedback, please reach out to [tony32059613@gmail.com](mailto:tony32059613@gmail.com).
-
