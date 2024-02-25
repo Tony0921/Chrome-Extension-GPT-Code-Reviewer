@@ -5,11 +5,36 @@ body {
     min-height: 80px;
     background-color: #f5f5f5;
     font-family: 'Kosugi Maru', sans-serif;
+    text-align: center;
+}
+
+.title {
+    width: 100%;
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.left {
+    flex: 0 0 20%;
+    text-align: center;
+}
+
+.mid {
+    flex: 0 0 60%;
+    text-align: center;
+}
+
+.right {
+    flex: 0 0 20%;
+    text-align: center;
 }
 
 h1 {
-    text-align: center;
+    /* text-align: center; */
     font-size: 2rem;
+
 }
 
 h3 {
@@ -62,4 +87,8 @@ p {
 
 strong {
     font-weight: bold;
+}
+
+img {
+    width: 64px;
 }

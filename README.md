@@ -14,7 +14,7 @@ The GPT Code Reviewer is a Chrome extension that empowers users to upload files 
 
 ## Installation
 
-1. Open the Chrome browser and navigate to the [GPT Code Reviewer](https://chrome.google.com/webstore/detail/gpt-code-reviewer/mfebbjnnjjedlmbgpdfpkfmmkghaiboo?fbclid=IwAR341zWeodJUiedTio7YWsIqXBRADEczX3A0cVnP89B989_AS_SUm-ElAqY) on the Chrome Web Store.
+1. Open the Chrome browser and navigate to the [GPT Code Reviewer](https://chromewebstore.google.com/detail/gpt-code-reviewer/mfebbjnnjjedlmbgpdfpkfmmkghaiboo) on the Chrome Web Store.
 2. Click on "Add to Chrome".
 3. Follow the on-screen instructions to complete the installation.
 

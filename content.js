@@ -1,14 +1,7 @@
 let canSend = true;
 var intervalID = setInterval(function () {
-    var rs = document.querySelectorAll('div.result-streaming.markdown');
-    var tag1 = document.querySelectorAll('div.markdown.prose');
-    var tag2 = document.querySelectorAll('div.flex.flex-col.items-start');
-    
-    if (tag2.length / tag1.length != 2.0){
-        return;
-    }
-
-    if (rs.length == 0) {
+    var element = document.querySelectorAll('button.absolute[data-testid="send-button"]');
+    if (element.length != 0) {
         canSend = true;
     } else {
         canSend = false;
@@ -59,6 +52,14 @@ async function chooseFiles() {
         }
 
         await sendCode(fileContents);
+    });
+}
+
+function readFile(file) {
+    return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsText(file);
+        reader.onload = () => resolve(reader.result);
     });
 }
 
@@ -129,7 +130,7 @@ async function sendCode(fileContents) {
 
     for (var fileContent of fileContents) {
         showUI("cancel");
-        statusMsg.innerText = `Waiting for upload ${fileContent.fileName} ...`;
+        statusMsg.innerText = `Waiting for upload [${fileCount+1}] ${fileContent.fileName} ...`;
 
         // 超出字數上限，跳過上傳
         if (fileContent.contents.length > 16000) {
@@ -152,8 +153,8 @@ async function sendCode(fileContents) {
 
         // 填入輸入框，按下送出按鈕
         var result = merge(fileContent.contents, fileContent.fileName);
-        setFieldValue(result);
-        clickSend();
+        sendMessageToGPT(result);
+        // console.log("file send");
         canSend = false;
         fileCount++;
 
@@ -173,14 +174,6 @@ async function sendCode(fileContents) {
 
         showUI("complete");
     }
-}
-
-function readFile(file) {
-    return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.readAsText(file);
-        reader.onload = () => resolve(reader.result);
-    });
 }
 
 function merge(content, fileName) {
@@ -208,13 +201,12 @@ function setPrompt(type) {
     else if (type == "markdown") {
         prompt = "Using markdown source code to write a readme.md for this program.";
     }
-    setFieldValue(prompt);
-    clickSend();
+    sendMessageToGPT(prompt);
 }
 
-function getSendBtn() {
-    var element = document.querySelectorAll('button.absolute[data-testid="send-button"]');
-    return element[0];
+function sendMessageToGPT(msg){
+    setFieldValue(msg);
+    clickSend();
 }
 
 function setFieldValue(value) {
@@ -232,8 +224,19 @@ function setFieldValue(value) {
 
 }
 
-function clickSend() {
+function getSendBtn() {
+    var element = document.querySelectorAll('button.absolute[data-testid="send-button"]');
+    return element[0];
+}
+
+async function clickSend() {
     var sendBtn = getSendBtn();
-    sendBtn.click();
-    canSend = false;
+    while(!sendBtn){
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        sendBtn = getSendBtn();
+    }
+    if(sendBtn){
+        sendBtn.click();
+        canSend = false;
+    }
 }
