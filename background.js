@@ -1,7 +1,7 @@
 function getTabInfo() {
     chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
         var activeTab = tabs[0];
-        if (activeTab.url.includes("chat.openai.com")) {
+        if (activeTab.url.includes("chatgpt.com")) {
             console.log("match");
             chrome.action.setPopup({ popup: './popup/popup.html' });
         } else {

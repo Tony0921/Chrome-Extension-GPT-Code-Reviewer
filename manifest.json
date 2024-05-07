@@ -1,14 +1,14 @@
 {
 	"manifest_version": 3,
 	"name": "GPT Code Reviewer",
-	"version": "3.4",
+	"version": "3.5",
 	"description": "This extension enables users to upload files for ChatGPT to analyze and summarize.",
 	"icons": {
 		"128": "icons/icon128.png"
 	},
 	"content_scripts": [
 		{
-			"matches": ["https://chat.openai.com/*"],
+			"matches": ["https://chatgpt.com/*"],
 			"css": ["content.css"],
 			"js": ["content.js"]
 			
