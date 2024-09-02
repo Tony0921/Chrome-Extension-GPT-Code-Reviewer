@@ -1,6 +1,6 @@
 let canSend = true;
 var intervalID = setInterval(function () {
-    var element = document.querySelectorAll('button[data-testid="fruitjuice-send-button"]');
+    var element = document.querySelectorAll('button[data-testid="send-button"]');
     if (element.length != 0) {
         canSend = true;
     } else {
@@ -225,7 +225,7 @@ function setFieldValue(value) {
 }
 
 function getSendBtn() {
-    var element = document.querySelectorAll('button[data-testid="fruitjuice-send-button"]');
+    var element = document.querySelectorAll('button[data-testid="send-button"]');
     return element[0];
 }
 
